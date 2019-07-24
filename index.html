@@ -47,11 +47,11 @@
         <h2>Acme Employee Lister</h2>
         <nav>
             <ur>
-                <li id="first">First</li>
-                <li id='previous'>Previous</li>
+                <a href="#"><li id="first">First</li></a>
+                <a href="#"><li id='previous'>Previous</li></a>
                 <li id='current'>1</li>
-                <li id='next'>Next</li>
-                <li id='last'>Last</li>
+                <a href="#"><li id='next'>Next</li></a>
+                <a href="#"><li id='last'>Last</li></a>
             </ur>
         </nav>
         <div id="title">
@@ -63,19 +63,55 @@
         <div id="main">
         </div>
         <script>
+            const first = document.querySelector('#first');
+            const previous = document.querySelector('#previous'); 
+            const current = document.querySelector('#current');
+            const next = document.querySelector('#next');
+            const last = document.querySelector('#last');
             const table = document.querySelector('#main');
-            fetch('https://acme-users-api-rev.herokuapp.com/api/users')
-            .then(response => response.json())
-            .then(data => {
-               console.log(data.users)
-               const html = data.users.map(ele =>
-               `<div class ='row'><div class='cell'>${ele.firstName}</div>
-               <div class='cell'>${ele.lastName}</div>
-               <div class='cell'>${ele.email}</div>
-               <div class='cell'>${ele.title}</div></div>`
-               ).join('')
-               table.innerHTML = html;
+
+            window.addEventListener('hashchange', ev =>{
+                const id = window.location.hash.slice(1);
+                console.log(id)
             })
+            let currentPage = 1;
+
+            first.addEventListener('click',ev =>{
+                loadPage(1)
+            })
+
+            last.addEventListener('click', ev =>{
+                loadPage(5)
+            })
+            next.addEventListener('click', ev=>{
+                if(currentPage < 5){
+                currentPage ++;
+                loadPage(currentPage);
+                }
+            })
+            previous.addEventListener('click', ev =>{
+                if(currentPage > 1){
+                    currentPage --;
+                    loadPage(currentPage)
+                }
+            })
+            
+
+            const loadPage = (currentPage)=>{
+                fetch('https://acme-users-api-rev.herokuapp.com/api/users')
+                .then(response => response.json())
+                .then(data => {
+                current.innerHTML = currentPage;
+                const html = data.users.map(ele =>
+                `<a href="#${ele.id}" class ='row'><div class='cell'>${ele.firstName}</div>
+                <div class='cell'>${ele.lastName}</div>
+                <div class='cell'>${ele.email}</div>
+                <div class='cell'>${ele.title}</div></a>`
+                ).slice((currentPage-1)*10,currentPage*10).join('');
+                table.innerHTML = html;
+                })
+            }
+            loadPage(1)
 
         </script>
     </body>
