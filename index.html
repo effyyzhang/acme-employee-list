@@ -1,14 +1,80 @@
 <html>
     <head>
+        <style>
+            body{
+                margin: 2rem;
+                padding: 0;
+
+            }
+            nav{
+                height: 3rem;
+            }
+            nav ur{
+                list-style: none;
+                display: flex;
+                justify-content: space-evenly;
+            }
+
+            main{
+
+            }
+            #title{
+                display: flex;
+                justify-content: space-around;
+
+                background-color: blue;
+                color: azure;
+            }
+            .title-item{
+                padding: 1rem;
+                text-align: left;
+                width: 25%;
+            }
+            .row{
+                display: flex;
+                justify-content: space-around;
+            }
+            .cell{
+                width: 25%;
+                padding: 1rem;
+            }
+        </style>
 
     </head>
     <body>
+        <h2>Acme Employee Lister</h2>
+        <nav>
+            <ur>
+                <li id="first">First</li>
+                <li id='previous'>Previous</li>
+                <li id='current'>1</li>
+                <li id='next'>Next</li>
+                <li id='last'>Last</li>
+            </ur>
+        </nav>
+        <div id="title">
+                <div class="title-item">First Name</div>
+                <div class="title-item">Last Name</div>
+                <div class="title-item">Email</div>
+                <div class="title-item">Title</div>
+            </div>
+        <div id="main">
+        </div>
         <script>
+            const table = document.querySelector('#main');
             fetch('https://acme-users-api-rev.herokuapp.com/api/users')
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+               console.log(data.users)
+               const html = data.users.map(ele =>
+               `<div class ='row'><div class='cell'>${ele.firstName}</div>
+               <div class='cell'>${ele.lastName}</div>
+               <div class='cell'>${ele.email}</div>
+               <div class='cell'>${ele.title}</div></div>`
+               ).join('')
+               table.innerHTML = html;
             })
+
         </script>
     </body>
 </html>
