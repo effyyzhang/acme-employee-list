@@ -40,6 +40,9 @@
                 width: 25%;
                 padding: 1rem;
             }
+            .disabled{
+                color: gray;
+            }
         </style>
 
     </head>
@@ -64,7 +67,7 @@
         </div>
         <script>
             const first = document.querySelector('#first');
-            const previous = document.querySelector('#previous'); 
+            const previous = document.querySelector('#previous');
             const current = document.querySelector('#current');
             const next = document.querySelector('#next');
             const last = document.querySelector('#last');
@@ -87,6 +90,8 @@
                 if(currentPage < 5){
                 currentPage ++;
                 loadPage(currentPage);
+                }else{
+                    next.classList.add('disabled');
                 }
             })
             previous.addEventListener('click', ev =>{
@@ -95,13 +100,14 @@
                     loadPage(currentPage)
                 }
             })
-            
+
 
             const loadPage = (currentPage)=>{
                 fetch('https://acme-users-api-rev.herokuapp.com/api/users')
                 .then(response => response.json())
                 .then(data => {
                 current.innerHTML = currentPage;
+
                 const html = data.users.map(ele =>
                 `<a href="#${ele.id}" class ='row'><div class='cell'>${ele.firstName}</div>
                 <div class='cell'>${ele.lastName}</div>
